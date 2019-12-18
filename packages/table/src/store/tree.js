@@ -159,17 +159,21 @@ export default {
     toggleTreeExpansion(row, expanded) {
       this.assertRowKey();
 
-      const { rowKey, treeData } = this.states;
+      const { rowKey, treeData, lazy } = this.states;
       const id = getRowIdentity(row, rowKey);
       const data = id && treeData[id];
       if (id && data && ('expanded' in data)) {
-        const oldExpanded = data.expanded;
-        expanded = typeof expanded === 'undefined' ? !data.expanded : expanded;
-        treeData[id].expanded = expanded;
-        if (oldExpanded !== expanded) {
-          this.table.$emit('expand-change', row, expanded);
+        if (lazy) {
+          this.loadData(row, id, data);
+        } else {
+          const oldExpanded = data.expanded;
+          expanded = typeof expanded === 'undefined' ? !data.expanded : expanded;
+          treeData[id].expanded = expanded;
+          if (oldExpanded !== expanded) {
+            this.table.$emit('expand-change', row, expanded);
+          }
+          this.updateTableScrollY();
         }
-        this.updateTableScrollY();
       }
     },
 
