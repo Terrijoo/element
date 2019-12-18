@@ -36,12 +36,12 @@ export default {
       if (!keys.length) return res;
       keys.forEach(key => {
         if (lazyTreeNodeMap[key].length) {
-          const item = { children: [] };
+          const item = { children: [], level: 0 };
           lazyTreeNodeMap[key].forEach(row => {
             const currentRowKey = getRowIdentity(row, rowKey);
             item.children.push(currentRowKey);
             if (row[lazyColumnIdentifier] && !res[currentRowKey]) {
-              res[currentRowKey] = { children: [] };
+              res[currentRowKey] = { children: [], level: 1 };
             }
           });
           res[key] = item;
@@ -127,12 +127,14 @@ export default {
           lazyKeys.forEach(key => {
             const oldValue = oldTreeData[key];
             const lazyNodeChildren = normalizedLazyNode[key].children;
+            const lazyNodeLevel = normalizedLazyNode[key].level;
             if (rootLazyRowKeys.indexOf(key) !== -1) {
               // 懒加载的 root 节点，更新一下原有的数据，原来的 children 一定是空数组
               if (newTreeData[key].children.length !== 0) {
                 throw new Error('[ElTable]children must be an empty array.');
               }
               newTreeData[key].children = lazyNodeChildren;
+              newTreeData[key].level = lazyNodeLevel;
             } else {
               const { loaded = false, loading = false } = oldValue || {};
               newTreeData[key] = {
@@ -141,7 +143,7 @@ export default {
                 loading: !!loading,
                 expanded: getExpanded(oldValue, key),
                 children: lazyNodeChildren,
-                level: ''
+                level: lazyNodeLevel
               };
             }
           });
@@ -163,7 +165,7 @@ export default {
       const id = getRowIdentity(row, rowKey);
       const data = id && treeData[id];
       if (id && data && ('expanded' in data)) {
-        if (lazy) {
+        if (lazy && !data.loaded && expanded) {
           this.loadData(row, id, data);
         } else {
           const oldExpanded = data.expanded;
