@@ -36,12 +36,12 @@ export default {
       if (!keys.length) return res;
       keys.forEach(key => {
         if (lazyTreeNodeMap[key].length) {
-          const item = { children: [], level: 0 };
+          const item = { children: [] };
           lazyTreeNodeMap[key].forEach(row => {
             const currentRowKey = getRowIdentity(row, rowKey);
             item.children.push(currentRowKey);
             if (row[lazyColumnIdentifier] && !res[currentRowKey]) {
-              res[currentRowKey] = { children: [], level: 1 };
+              res[currentRowKey] = { children: [] };
             }
           });
           res[key] = item;
@@ -117,6 +117,7 @@ export default {
             const { loaded = false, loading = false } = oldValue || {};
             newValue.loaded = !!loaded;
             newValue.loading = !!loading;
+            newValue.level = 0;
             rootLazyRowKeys.push(key);
           }
           newTreeData[key] = newValue;
@@ -127,14 +128,12 @@ export default {
           lazyKeys.forEach(key => {
             const oldValue = oldTreeData[key];
             const lazyNodeChildren = normalizedLazyNode[key].children;
-            const lazyNodeLevel = normalizedLazyNode[key].level;
             if (rootLazyRowKeys.indexOf(key) !== -1) {
               // 懒加载的 root 节点，更新一下原有的数据，原来的 children 一定是空数组
               if (newTreeData[key].children.length !== 0) {
                 throw new Error('[ElTable]children must be an empty array.');
               }
               newTreeData[key].children = lazyNodeChildren;
-              newTreeData[key].level = lazyNodeLevel;
             } else {
               const { loaded = false, loading = false } = oldValue || {};
               newTreeData[key] = {
@@ -142,13 +141,22 @@ export default {
                 loaded: !!loaded,
                 loading: !!loading,
                 expanded: getExpanded(oldValue, key),
-                children: lazyNodeChildren,
-                level: lazyNodeLevel
+                children: lazyNodeChildren
               };
             }
           });
         }
       }
+
+      for (let prop in newTreeData) {
+        if (newTreeData.hasOwnProperty(prop)) {
+          const found = Object.values(newTreeData).find(data => data.children.find(child => child === prop));
+          if (found) {
+            newTreeData[prop].level = found.level + 1;
+          }
+        }
+      }
+
       this.states.treeData = newTreeData;
       this.updateTableScrollY();
     },
