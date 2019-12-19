@@ -211,8 +211,11 @@ export default {
           treeData[key].loading = false;
           treeData[key].loaded = true;
           treeData[key].expanded = true;
-          if (data.length) {
+          const othersLoading = Object.values(treeData).find(treeData => treeData.loading);
+          if (data.length && !othersLoading) {
             this.$set(lazyTreeNodeMap, key, data);
+          } else if (data.length) {
+            lazyTreeNodeMap[key] = data;
           }
           this.table.$emit('expand-change', row, true);
         });
