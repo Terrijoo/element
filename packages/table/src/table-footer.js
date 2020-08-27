@@ -69,7 +69,7 @@ export default {
                     {
                       sums[cellIndex]
                     }
-                  </div> : <div class={['cell', column.labelClassName]} v-html={sums[cellIndex]}></div>
+                  </div> : <div class={['cell', column.labelClassName]} domPropsInnerHTML={sums[cellIndex]}></div>
                 }
               </td>)
             }
