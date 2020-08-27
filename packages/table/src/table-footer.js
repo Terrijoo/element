@@ -64,11 +64,11 @@ export default {
                 colspan={ column.colSpan }
                 rowspan={ column.rowSpan }
                 class={ this.getRowClasses(column, cellIndex) }>
-                <div class={ ['cell', column.labelClassName] }>
+                !this.useSummaryHtml ? <div class={ ['cell', column.labelClassName] }>
                   {
                     sums[cellIndex]
                   }
-                </div>
+                </div> : <div class={['cell', column.labelClassName]} v-html={sums[cellIndex]}></div>
               </td>)
             }
             {
@@ -86,6 +86,10 @@ export default {
       required: true
     },
     summaryMethod: Function,
+    useSummaryHtml: {
+      type: Boolean,
+      default: false
+    },
     sumText: String,
     border: Boolean,
     defaultSort: {

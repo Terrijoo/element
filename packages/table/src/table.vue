@@ -73,6 +73,7 @@
         :sum-text="sumText || t('el.table.sumText')"
         :summary-method="summaryMethod"
         :default-sort="defaultSort"
+        :use-summary-html="useSummaryHtml"
         :style="{
           width: layout.bodyWidth ? layout.bodyWidth + 'px' : ''
         }">
@@ -276,6 +277,11 @@
       sumText: String,
 
       summaryMethod: Function,
+
+      useSummaryHtml: {
+        type: Boolean,
+        default: false
+      },
 
       rowClassName: [String, Function],
 
