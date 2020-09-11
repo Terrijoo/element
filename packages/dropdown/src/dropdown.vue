@@ -59,6 +59,10 @@
       tabindex: {
         type: Number,
         default: 0
+      },
+      popperClass: {
+        type: String,
+        default: ''
       }
     },
 
@@ -88,7 +92,7 @@
     watch: {
       visible(val) {
         this.broadcast('ElDropdownMenu', 'visible', val);
-        this.$emit('visible-change', val);
+        this.$emit('visible-change', val, this.popperClass);
       },
       focusing(val) {
         const selfDefine = this.$el.querySelector('.el-dropdown-selfdefine');

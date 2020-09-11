@@ -1,6 +1,9 @@
 <template>
   <transition name="el-zoom-in-top" @after-leave="doDestroy">
-    <ul class="el-dropdown-menu el-popper" :class="[size && `el-dropdown-menu--${size}`]" v-show="showPopper">
+    <ul
+      class="el-dropdown-menu el-popper"
+      :class="[size && `el-dropdown-menu--${size}`, popperClass]"
+      v-show="showPopper">
       <slot></slot>
     </ul>
   </transition>
@@ -28,7 +31,8 @@
 
     data() {
       return {
-        size: this.dropdown.dropdownSize
+        size: this.dropdown.dropdownSize,
+        popperClass: ''
       };
     },
 
@@ -38,8 +42,9 @@
       this.$on('updatePopper', () => {
         if (this.showPopper) this.updatePopper();
       });
-      this.$on('visible', val => {
+      this.$on('visible', (val, popperClass) => {
         this.showPopper = val;
+        this.popperClass = popperClass;
       });
     },
 
