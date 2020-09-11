@@ -91,8 +91,8 @@
 
     watch: {
       visible(val) {
-        this.broadcast('ElDropdownMenu', 'visible', val);
-        this.$emit('visible-change', val, this.popperClass);
+        this.broadcast('ElDropdownMenu', 'visible', val, this.popperClass);
+        this.$emit('visible-change', val);
       },
       focusing(val) {
         const selfDefine = this.$el.querySelector('.el-dropdown-selfdefine');
