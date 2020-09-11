@@ -2,7 +2,7 @@
   <transition name="el-zoom-in-top" @after-leave="doDestroy">
     <ul
       class="el-dropdown-menu el-popper"
-      :class="[size && `el-dropdown-menu--${size}`, popperClass]"
+      :class="[size && `el-dropdown-menu--${size}`, `${popperClass}`]"
       v-show="showPopper">
       <slot></slot>
     </ul>
