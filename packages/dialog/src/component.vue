@@ -163,7 +163,8 @@
           }
         };
       },
-      handleWrapperClick() {
+      handleWrapperClick(evt) {
+        if (evt.offsetX > evt.target.clientWidth || evt.offsetY > evt.target.clientHeight) return;
         if (!this.closeOnClickModal) return;
         this.handleClose();
       },
