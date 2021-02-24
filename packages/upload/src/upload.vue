@@ -1,6 +1,7 @@
 <script>
 import ajax from './ajax';
 import UploadDragger from './upload-dragger.vue';
+import parallelLimit from 'async/parallelLimit';
 
 export default {
   inject: ['uploader'],
@@ -75,6 +76,8 @@ export default {
       if (!this.multiple) { postFiles = postFiles.slice(0, 1); }
 
       if (postFiles.length === 0) { return; }
+
+      console.log(parallelLimit);
 
       postFiles.forEach(rawFile => {
         this.onStart(rawFile);
